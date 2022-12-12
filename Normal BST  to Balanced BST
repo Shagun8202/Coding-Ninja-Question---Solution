@@ -1,0 +1,49 @@
+/*************************************************************
+    Following is the Binary Serach Tree node structure
+
+    template <typename T>
+    class TreeNode
+    {
+    public :
+        T data;
+        TreeNode<T> *left;
+        TreeNode<T> *right;
+
+        TreeNode(T data) {
+            this -> data = data;
+            left = NULL;
+            right = NULL;
+        }
+
+        ~TreeNode() {
+            if (left)
+                delete left;
+            if (right)
+                delete right;
+        }
+    };
+
+*************************************************************/
+TreeNode<int>* solve(int i , int j , vector<int> v){
+    if(i>j){
+        return NULL;
+    }
+    int mid = (i+j)/2;
+    TreeNode<int>* temp = new TreeNode<int>(v[mid]);
+    temp -> left = solve(i,mid-1,v);
+    temp ->right = solve(mid+1,j,v);
+    return temp;
+}
+void inorder(TreeNode<int>* root,vector<int> &v){
+    if(root==NULL){
+        return  ;
+    }
+    inorder(root->left,v);
+    v.push_back(root->data);
+    inorder(root->right,v);
+}
+TreeNode<int>* balancedBst(TreeNode<int>* root) {
+    vector<int> v;
+    inorder(root,v);
+    return solve(0,v.size()-1,v);
+}
