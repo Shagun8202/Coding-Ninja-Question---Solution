@@ -1,0 +1,184 @@
+#include <bits/stdc++.h> 
+/*************************************************************
+    
+    Following is the Binary Tree node structure:
+
+    class TreeNode{
+
+        public :
+            int data;
+            TreeNode *left;
+            TreeNode *right;
+
+            TreeNode(int data) {
+                this -> data = data;
+                left = NULL;
+                right = NULL;
+            }
+
+            ~TreeNode() {
+            if (left){
+            delete left;
+            }
+
+            if (right){
+            delete right;
+            }
+        }   
+    };
+
+*************************************************************/
+ 
+vector<int> merging(vector<int> v1, vector<int> v2){
+    int i = 0;
+    int j = 0;
+    vector<int> v3;
+    while(i<v1.size() && j<v2.size()){
+        if(v1[i] < v2[j]){
+            v3.push_back(v1[i]);
+            i++;
+            
+        }
+        else{
+            v3.push_back(v2[j]);
+            j++;
+        }
+    }
+    while(i<v1.size()){
+        v3.push_back(v1[i]);
+        i++;
+    }
+    while(j<v2.size()){
+        v3.push_back(v2[j]);
+        j++;
+    }
+    return v3;
+    
+}
+void inorder(TreeNode<int> *root , vector<int> &v){
+    if(root == NULL){
+        return ;
+    }
+     inorder(root->left,v);
+    v.push_back(root->data);
+     inorder(root->right,v);
+}
+TreeNode<int> *bst(vector<int> &v,int s, int e){
+    
+       if(s>e){
+           return NULL;
+       }
+    int mid = (s+e)/2;
+    TreeNode<int> *root = new TreeNode<int>(v[mid]);
+    root->left = bst(v,s,mid-1);
+    root->right = bst(v,mid+1,e);
+    return root;
+   }
+void dll(TreeNode<int> *root,TreeNode<int>* &head){
+    if(root==NULL){
+        return ;
+    }
+    dll(root->right,head);
+    root->right = head;
+    if(head != NULL){
+        head->left = root;
+    }
+    head = root;
+    dll(root->left,head);
+}
+TreeNode<int> *mergell(TreeNode<int> *head1,TreeNode<int> *head2){
+    TreeNode<int> *head =NULL;
+    TreeNode<int> *tail = NULL;
+    while(head1 != NULL  && head2 !=NULL){
+        if(head1->data < head2->data){
+            if(head == NULL){
+               head = head1;
+                tail = head1;
+                head1=head1->right;
+            }
+            else{
+                tail ->right = head1;
+                head1->left = tail;
+                tail= head1;
+                head1= head1->right;
+            }
+        }
+        else{
+            if(head == NULL){
+                  head = head2;
+                tail = head2;
+                head2=head2->right;
+            }
+            else{
+                tail ->right = head2;
+                head2->left = tail;
+                tail= head2;
+                head2= head2->right;
+            }
+            
+        }
+    }
+    while(head1 != NULL){
+        tail ->right = head1;
+                head1->left = tail;
+                tail= head1;
+                head1= head1->right;
+    }
+    while(head2 != NULL){
+        tail ->right = head2;
+                head2->left = tail;
+                tail= head2;
+                head2= head2->right;
+    }
+    return head;
+}
+int count(TreeNode<int> *head){
+    int cnt = 0;
+    TreeNode<int> *temp = head;
+    while(temp != NULL){
+        cnt++;
+        temp = temp->right;
+    }
+    return cnt;
+}
+TreeNode<int> *dlltobst(TreeNode<int> *head,int n){
+    //base case
+    if(n<=0 || head==NULL){
+        return NULL;
+    }
+    TreeNode<int> *left = dlltobst(head,n/2);
+    TreeNode<int> *root= head;
+    root->left =  left;
+    head = head -> right;
+    root->right = dlltobst(head,n-n/2-1);
+    return root;
+    
+}
+
+TreeNode<int> *mergeBST(TreeNode<int> *root1, TreeNode<int> *root2){
+//     // inorder of both trees
+//     vector<int> v1;
+//     vector<int> v2;
+//     inorder(root1,v1);
+//     inorder(root2,v2);
+//     // merging both inorders
+//     vector<int> merge = merging(v1,v2);
+//     // inorder to bst;
+//     int s = 0;
+//     int e = merge.size()-1;
+//     TreeNode<int> *root = bst(merge,s,e);
+//     return root;
+    
+    // convert bst into sorted dll inplace
+    TreeNode<int> *head1 = NULL;
+    dll(root1,head1);
+    head1->left = NULL;
+    TreeNode<int> *head2 = NULL;
+    dll(root2,head2);
+    head2->left = NULL;
+    
+    // merge two dll
+    TreeNode<int> *head = mergell(head1,head2);
+    // dll tp bst
+    return dlltobst(head,count(head));
+    }
