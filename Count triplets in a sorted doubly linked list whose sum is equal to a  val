@@ -1,0 +1,51 @@
+#include <bits/stdc++.h> 
+/***********************************************
+
+    Following is the class structure of the Node class:
+
+    class DLLNode
+    {
+        public:
+        int data;
+        DLLNode *next;
+        DLLNode *prev;
+    };
+
+***********************************************/
+int solve(DLLNode* first,DLLNode* last,int y){
+    int cnt = 0;
+    while(first != last && last->next !=first && first != NULL && last != NULL){
+        if(first->data +  last->data == y){
+            cnt++;
+            first = first->next;
+            last = last ->prev;
+        }
+        else if(first->data + last->data > y){
+            last = last->prev;
+        }
+        else{
+            first = first->next;
+        }
+    }
+    return cnt;
+}
+
+int countTriplets(DLLNode* head, int x)
+{
+    DLLNode* curr,*first,*last;
+    int cnt = 0;
+    if(head == NULL || head->next == NULL || head->next->next == NULL){
+        return cnt;
+    }
+    last = head;
+    while(last->next!= NULL){
+        last = last ->next;
+        
+    }
+    
+    for(curr=head;curr!= NULL;curr = curr->next){
+        first = curr->next;
+        cnt += solve(first,last,x-curr->data);
+        }
+    return cnt;
+}  
