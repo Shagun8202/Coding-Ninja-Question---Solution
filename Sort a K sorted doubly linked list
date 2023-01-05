@@ -1,0 +1,41 @@
+#include <bits/stdc++.h> 
+/****************************************************************
+
+    Following is the class structure of the Node class:
+
+        class Node
+        {
+        public:
+            int data;
+            Node *next;
+            Node *prev;
+            Node(int data)
+            {
+                this->data = data;
+                this->next = NULL;
+                this->prev = NULL;
+            }
+        };
+
+*****************************************************************/
+
+Node *sortedDll(Node *head, int k)
+{
+    Node* curr = head;
+    while(curr != NULL){
+        Node* prev1 = curr->prev;
+        int key = curr->data;
+        while(prev1 != NULL && key<prev1->data){
+            prev1->next->data = prev1->data;
+            prev1=prev1->prev;
+            }
+        if(prev1== NULL){
+            head->data = key;
+        }
+        else{
+           prev1->next->data = key; 
+        }
+        curr = curr->next;
+    }
+    return head;
+}
