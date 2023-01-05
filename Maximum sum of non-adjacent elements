@@ -1,0 +1,36 @@
+#include <bits/stdc++.h> 
+int solve(vector<int> &nums,int n,vector<int> &dp){
+    if(n<0){
+        return 0;
+    }
+    if(n==0){
+        return nums[0];
+    }
+    if(dp[n] != 0){
+        return dp[n];
+    }
+    int incl = solve(nums,n-2,dp) + nums[n];
+    int exl= solve(nums,n-1,dp);
+    dp[n]=max(incl,exl);
+    return dp[n];
+}
+int solve2(vector<int> &nums,int n){
+    int prev2 = 0;
+    int prev1 = nums[0];
+    
+   for(int i = 1;i<n;i++){
+    int incl = prev2 + nums[i];
+    int exl= prev1;
+    int curr=max(incl,exl);
+       prev2 = prev1;
+       prev1=curr;
+   }
+    return prev1;
+}
+
+int maximumNonAdjacentSum(vector<int> &nums){
+    int n = nums.size();
+    vector<int> dp(n,0);
+    int ans = solve2(nums,n);
+    return ans;
+}
