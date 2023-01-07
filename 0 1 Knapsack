@@ -1,0 +1,30 @@
+#include <bits/stdc++.h> 
+int solve(vector<int> &w,vector<int> &val,int n,int mw,vector<vector<int> > &dp){
+    if( n == 0){
+        if(w[0] <= mw ){
+            return val[0];
+        }
+        else {
+            return 0;
+        }
+    }
+    if(dp[n][mw] != -1){
+        return dp [n][mw];
+    }
+    
+    int notake = 0 + solve(w,val,n-1,mw,dp);
+    int take = INT_MIN;
+    if(w[n] <= mw){
+        take = val[n] + solve(w,val,n-1,mw-w[n],dp);
+    }
+    
+    int maxi = max(take,notake);
+    dp[n][mw] = maxi;
+    return dp [n][mw];
+}
+int knapsack(vector<int> weight, vector<int> value, int n, int maxWeight) 
+{  
+    vector<vector<int> > dp(n,vector<int> (maxWeight + 1,-1));
+    return solve(weight,value,n-1,maxWeight,dp);
+	
+}
